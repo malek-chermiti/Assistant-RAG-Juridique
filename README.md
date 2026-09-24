@@ -31,8 +31,8 @@ npm run dev
 ```
 
 - Frontend : http://localhost:5173
-- API : http://localhost:3000
-- Health check : http://localhost:3000/api/health
+- API : http://localhost:3001
+- Health check : http://localhost:3001/api/health
 
 Le proxy Vite redirige automatiquement les requetes `/api` du client vers Express.
 
