@@ -1,0 +1,44 @@
+.app-shell {
+  width: min(680px, 100%);
+  margin: auto;
+  padding: 48px 24px;
+  text-align: left;
+}
+
+.eyebrow {
+  color: #b85c38;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.intro {
+  max-width: 520px;
+}
+
+.status-panel {
+  align-items: center;
+  background: #fff8ed;
+  border: 1px solid #ead8bf;
+  border-radius: 8px;
+  display: flex;
+  gap: 14px;
+  margin-top: 32px;
+  padding: 18px;
+}
+
+.status-panel p {
+  margin-top: 4px;
+}
+
+.status-dot {
+  background: #b85c38;
+  border-radius: 50%;
+  height: 12px;
+  width: 12px;
+}
+
+.status-dot.online {
+  background: #36815a;
+}
