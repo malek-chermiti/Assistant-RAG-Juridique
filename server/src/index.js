@@ -1,13 +1,18 @@
 
-import 'dotenv/config';
+import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
 import os from 'node:os';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { unlink } from 'node:fs/promises';
 import { runAgent } from './agent.js';
 import { ingestData } from './ingest.js';
+
+dotenv.config({
+  path: path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../.env'),
+});
 
 const app = express();
 app.use(cors());
