@@ -1,44 +1,30 @@
 :root {
-  --text: #625f5a;
-  --text-h: #29241e;
-  --bg: #f4efe7;
-  --border: #ded3c4;
-
   --sans: Georgia, 'Times New Roman', serif;
-  --heading: Georgia, 'Times New Roman', serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
+  font: 16px/1.45 var(--sans);
   color-scheme: light;
-  color: var(--text);
-  background: var(--bg);
+  color: #202923;
+  background: #f5f5ef;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  min-width: 320px;
+  min-height: 100svh;
 }
 
 #root {
   min-height: 100svh;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
-}
-
-h1 {
-  font-size: clamp(2.4rem, 8vw, 5rem);
-  line-height: 1;
-  margin: 18px 0;
+button,
+textarea {
+  font-family: inherit;
 }
