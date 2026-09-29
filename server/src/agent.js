@@ -25,14 +25,14 @@ export async function runAgent({ sessionId = 'default', message, requestId }) {
       tools: [searchKnowledgeBase],
       checkpointer,
       systemPrompt:
-        'You are a helpful AI assistant with access to a knowledge base. When users ask questions, search the knowledge base using the available tools to find relevant information. Be concise and accurate.',
+        'You are a helpful AI assistant with access to a legal document knowledge base. For each user question, call search_knowledge_base at most once. After receiving its result, answer the user without calling any tools again. If no relevant passages are found, say so clearly instead of searching repeatedly. Be concise and accurate.',
     });
 
     console.info(`[${requestId}] Agent invocation started`, { model: modelName });
 
     const response = await agent.invoke(
       { messages: [{ role: 'user', content: message }] },
-      { configurable: { thread_id: sessionId } },
+      { configurable: { thread_id: sessionId }, recursionLimit: 8 },
     );
 
     const lastMessage = response.messages[response.messages.length - 1];

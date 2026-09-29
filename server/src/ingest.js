@@ -6,12 +6,14 @@ import { Pinecone } from '@pinecone-database/pinecone';
 export const ingestData = async (filePath) => {
   const loader = new PDFLoader(filePath);
   const docs = await loader.load();
+  console.info('[ingest] PDF loaded', { documentCount: docs.length });
 
   const splitter = new RecursiveCharacterTextSplitter({
     chunkSize: 1000,
     chunkOverlap: 200,
   });
   const chunks = await splitter.splitDocuments(docs);
+  console.info('[ingest] PDF split into chunks', { chunkCount: chunks.length });
 
   const pinecone = new Pinecone({ apiKey: process.env.PINECONE_API_KEY });
   const index = pinecone.Index(process.env.PINECONE_INDEX);
@@ -25,5 +27,5 @@ export const ingestData = async (filePath) => {
     await store.addDocuments(chunks.slice(i, i + batchSize));
   }
 
-  console.log('Ingestion complete');
+  console.info('[ingest] Ingestion complete', { chunkCount: chunks.length });
 };
