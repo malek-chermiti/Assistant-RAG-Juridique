@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 import cors from 'cors';
 import multer from 'multer';
+import { randomUUID } from 'node:crypto';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,25 +41,49 @@ app.get('/api/health', (_request, response) => {
 });
 
 app.post('/api/chat', async (request, response) => {
+  const requestId = randomUUID();
+  const startedAt = Date.now();
+  const { message, sessionId } = request.body ?? {};
+
+  console.info(`[${requestId}] POST /api/chat started`, {
+    hasMessage: typeof message === 'string' && message.trim().length > 0,
+  });
+
   try {
-    const { message, sessionId } = request.body;
     if (!message) {
+      console.warn(`[${requestId}] POST /api/chat rejected: message missing`);
       return response.status(400).json({ error: 'Message required' });
     }
 
-    const answer = await runAgent({ message, sessionId });
+    const answer = await runAgent({ message, sessionId, requestId });
     const output = answer?.output || answer?.text || '';
 
     if (!output || output.trim() === '') {
+      console.warn(`[${requestId}] POST /api/chat completed without output`, {
+        durationMs: Date.now() - startedAt,
+      });
       return response.json({
         answer: "I couldn't generate a proper response. Please rephrase your question.",
       });
     }
 
+    console.info(`[${requestId}] POST /api/chat succeeded`, {
+      durationMs: Date.now() - startedAt,
+    });
     return response.json({ answer: output });
   } catch (error) {
-    console.error(error);
-    return response.status(500).json({ error: error.message });
+    console.error(`[${requestId}] POST /api/chat failed`, {
+      durationMs: Date.now() - startedAt,
+      name: error?.name,
+      message: error?.message ?? String(error),
+      code: error?.code ?? error?.cause?.code,
+      cause: error?.cause?.message,
+      stack: error?.stack,
+    });
+    return response.status(500).json({
+      error: error?.message ?? 'Internal server error',
+      requestId,
+    });
   }
 });
 

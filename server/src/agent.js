@@ -5,10 +5,11 @@ import { searchKnowledgeBase } from './tools.js';
 
 const checkpointer = new MemorySaver();
 
-export async function runAgent({ sessionId = 'default', message }) {
+export async function runAgent({ sessionId = 'default', message, requestId }) {
   try {
+    const modelName = process.env.OPENAI_MODEL || 'gpt-4o';
     const model = new ChatOpenAI({
-      model: process.env.OPENAI_MODEL || 'gpt-4o',
+      model: modelName,
       temperature: 0,
     });
 
@@ -20,7 +21,7 @@ export async function runAgent({ sessionId = 'default', message }) {
         'You are a helpful AI assistant with access to a knowledge base. When users ask questions, search the knowledge base using the available tools to find relevant information. Be concise and accurate.',
     });
 
-    console.log(`Running agent for: "${message}"`);
+    console.info(`[${requestId}] Agent invocation started`, { model: modelName });
 
     const response = await agent.invoke(
       { messages: [{ role: 'user', content: message }] },
@@ -32,9 +33,10 @@ export async function runAgent({ sessionId = 'default', message }) {
       ? lastMessage.content
       : JSON.stringify(lastMessage?.content || '');
 
+    console.info(`[${requestId}] Agent invocation completed`);
     return { output };
   } catch (error) {
-    console.error('Error in runAgent:', error);
+    console.error(`[${requestId}] Agent invocation failed`, error);
     throw error;
   }
 }
