@@ -1,4 +1,4 @@
-import { ChatGroq } from '@langchain/groq';
+import { ChatOpenAI } from '@langchain/openai';
 import { createAgent } from 'langchain';
 import { MemorySaver } from '@langchain/langgraph-checkpoint';
 import { searchKnowledgeBase } from './tools.js';
@@ -7,10 +7,17 @@ const checkpointer = new MemorySaver();
 
 export async function runAgent({ sessionId = 'default', message, requestId }) {
   try {
-    const modelName = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
-    const model = new ChatGroq({
+    const apiKey = process.env.GROQ_API_KEY;
+    if (!apiKey) {
+      throw new Error('GROQ_API_KEY is not configured');
+    }
+
+    const modelName = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
+    const model = new ChatOpenAI({
       model: modelName,
-      temperature: 0,
+      apiKey,
+      configuration: { baseURL: 'https://api.groq.com/openai/v1' },
+      temperature: 0.7,
     });
 
     const agent = createAgent({
