@@ -1,4 +1,4 @@
-import { ChatOpenAI } from '@langchain/openai';
+import { ChatGroq } from '@langchain/groq';
 import { createAgent } from 'langchain';
 import { MemorySaver } from '@langchain/langgraph-checkpoint';
 import { searchKnowledgeBase } from './tools.js';
@@ -7,8 +7,8 @@ const checkpointer = new MemorySaver();
 
 export async function runAgent({ sessionId = 'default', message, requestId }) {
   try {
-    const modelName = process.env.OPENAI_MODEL || 'gpt-4o';
-    const model = new ChatOpenAI({
+    const modelName = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+    const model = new ChatGroq({
       model: modelName,
       temperature: 0,
     });
