@@ -2,6 +2,23 @@
 
 Assistant juridique avec interface React, API Express, recherche documentaire Pinecone et modèle Groq.
 
+## Architecture
+
+```mermaid
+flowchart LR
+	Browser[Navigateur] --> Vite[React + Vite :5173]
+	Vite -->|Requetes /api| API[Express :3001]
+	API -->|POST /api/ingest| Upload[Upload et lecture PDF]
+	Upload --> Splitter[Decoupage en chunks]
+	Splitter -->|Embeddings| Pinecone[(Pinecone)]
+	API -->|POST /api/chat| Agent[Agent LangChain]
+	Agent -->|Generation| Groq[Groq API]
+	Agent -->|Recherche semantique| Pinecone
+	Pinecone --> Agent
+	Agent --> API
+	API --> Vite
+```
+
 ## Prerequis
 
 - Node.js 20 ou plus recent
