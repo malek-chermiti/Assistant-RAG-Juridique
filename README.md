@@ -1,44 +1,46 @@
 # Assistant RAG Juridique
 
-Application full-stack avec un client React/Vite et une API Express/Node.js.
+Assistant juridique avec interface React, API Express, recherche documentaire Pinecone et modèle Groq.
 
-## Architecture
+## Prerequis
 
-```text
-.
-├── client/             # Frontend React + Vite
-│   └── src/
-├── server/             # Backend Express
-│   └── src/index.js
-├── package.json        # Commandes communes
-└── README.md
-```
+- Node.js 20 ou plus recent
+- Cles API Groq et Pinecone
 
 ## Installation
 
+Depuis la racine du projet :
+
 ```bash
 npm install
-npm install --prefix client
-npm install --prefix server
+npm run install:all
 ```
 
-## Developpement
+Creer un fichier `.env` a la racine :
 
-Lancer le client et le serveur ensemble :
+```env
+GROQ_API_KEY=...
+GROQ_MODEL=openai/gpt-oss-20b
+PINECONE_API_KEY=...
+PINECONE_INDEX=...
+```
+
+Ne jamais committer `.env` ni partager les cles API.
+
+## Demarrage
+
+Depuis la racine, lancer le frontend et le backend :
 
 ```bash
 npm run dev
 ```
 
-- Frontend : http://localhost:5173
-- API : http://localhost:3001
-- Health check : http://localhost:3001/api/health
+Ouvrir http://localhost:5173. L'API est sur http://localhost:3001; son etat se verifie sur http://localhost:3001/api/health.
 
-Le proxy Vite redirige automatiquement les requetes `/api` du client vers Express.
-
-## Production
+Pour lancer uniquement le backend :
 
 ```bash
-npm run build --prefix client
-npm start --prefix server
+npm run dev --prefix server
 ```
+
+L'import accepte les fichiers PDF jusqu'a 25 Mo. Le proxy Vite transmet les requetes `/api` au backend.
